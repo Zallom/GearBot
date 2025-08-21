@@ -197,6 +197,10 @@ LOGGING_INFO = {
         },
         "username_changed": "NAMETAG"
     },
+    "REACTION_LOGS": {
+        "reaction_added": "REACT_ADD",
+        "reaction_removed": "REACT_REMOVE"
+    },
     "RAID_LOGS": {
         "failures": {
             "raid_ban_forbidden": "WARNING",

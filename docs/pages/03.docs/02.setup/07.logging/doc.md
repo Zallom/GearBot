@@ -14,6 +14,7 @@ GearBot can log the following things (these are also the keys you use in the con
         "MESSAGE_LOGS",
         "VOICE_CHANGES_DETAILED",
         "VOICE_CHANGES",
+        "REACTION_LOGS",
         "SPAM_VIOLATION",
         "CONFIG_CHANGES",
         "FUTURE_LOGS"
@@ -27,6 +28,7 @@ GearBot can log the following things (these are also the keys you use in the con
 - ``MESSAGE_LOGS``
 - ``VOICE_CHANGES``
 - ``VOICE_CHANGES_DETAILED``
+- ``REACTION_LOGS``
 - ``SPAM_VIOLATION``
 - ``CONFIG_CHANGES``
 - ``FUTURE_LOGS``

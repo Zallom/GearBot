@@ -394,6 +394,9 @@ def v36(config):
     config["CENSORING"]["MAX_LIST_LENGTH"] = 400
     config["FLAGGING"]["MAX_LIST_LENGTH"] = 400
 
+def v37(config):
+    add_logging(config, "REACTION_LOGS")
+
 def force_lower(config, cat, key):
     new = []
     for item in config[cat][key]:

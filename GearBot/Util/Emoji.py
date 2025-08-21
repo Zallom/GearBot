@@ -51,6 +51,8 @@ BACKUPS = {
     "PIN": "📌",
     "PING": "🏓",
     "QUESTION": "❓",
+    "REACT_ADD": "👍",
+    "REACT_REMOVE": "👎",
     "REFRESH": "🔁",
     "RIGHT": "➡️",
     "ROLE_ADD": "🛫",

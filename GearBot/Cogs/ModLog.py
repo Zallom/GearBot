@@ -7,7 +7,7 @@ import disnake
 from disnake import AuditLogAction, Role, DMChannel, MessageType, Thread, ChannelType
 from disnake.embeds import EmptyEmbed
 from disnake.ext import commands
-from disnake.raw_models import RawMessageDeleteEvent, RawMessageUpdateEvent, RawThreadDeleteEvent
+from disnake.raw_models import RawMessageDeleteEvent, RawMessageUpdateEvent, RawThreadDeleteEvent, RawReactionActionEvent
 from disnake.utils import snowflake_time
 
 from Cogs.BaseCog import BaseCog
@@ -821,6 +821,82 @@ class ModLog(BaseCog):
         if member is not None:
             GearbotLogging.log_key(thread.guild.id, "thread_member_remove", user=Utils.clean_user(member),
                                    user_id=member.id, thread_id=thread.id, channel_id=thread.parent_id)
+
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload: RawReactionActionEvent):
+        if not hasattr(payload, 'guild_id') or payload.guild_id is None:
+            return
+        
+        guild = self.bot.get_guild(payload.guild_id)
+        if guild is None or not Features.is_logged(guild.id, "REACTION_LOGS"):
+            return
+        
+        channel = self.bot.get_channel(payload.channel_id)
+        if channel is None or isinstance(channel, DMChannel):
+            return
+            
+        user = await Utils.get_user(payload.user_id)
+        if user is None or user.bot:
+            return
+        
+        # Get the message to include message info in the log
+        try:
+            message = await channel.fetch_message(payload.message_id)
+            message_author = Utils.clean_user(message.author) if message.author else "Unknown"
+            message_author_id = message.author.id if message.author else 0
+        except:
+            message_author = "Unknown"
+            message_author_id = 0
+        
+        emoji_str = str(payload.emoji)
+        if payload.emoji.id is not None:
+            emoji_str = f"<:{payload.emoji.name}:{payload.emoji.id}>"
+        
+        GearbotLogging.log_key(guild.id, 'reaction_added', 
+                              user=Utils.clean_user(user), user_id=user.id,
+                              channel=channel.mention, channel_id=channel.id,
+                              message_id=payload.message_id,
+                              emoji=emoji_str,
+                              message_author=message_author, message_author_id=message_author_id,
+                              jump_link=assemble_jumplink(guild.id, channel.id, payload.message_id))
+
+    @commands.Cog.listener()
+    async def on_raw_reaction_remove(self, payload: RawReactionActionEvent):
+        if not hasattr(payload, 'guild_id') or payload.guild_id is None:
+            return
+        
+        guild = self.bot.get_guild(payload.guild_id)
+        if guild is None or not Features.is_logged(guild.id, "REACTION_LOGS"):
+            return
+        
+        channel = self.bot.get_channel(payload.channel_id)
+        if channel is None or isinstance(channel, DMChannel):
+            return
+            
+        user = await Utils.get_user(payload.user_id)
+        if user is None or user.bot:
+            return
+        
+        # Get the message to include message info in the log
+        try:
+            message = await channel.fetch_message(payload.message_id)
+            message_author = Utils.clean_user(message.author) if message.author else "Unknown"
+            message_author_id = message.author.id if message.author else 0
+        except:
+            message_author = "Unknown"
+            message_author_id = 0
+        
+        emoji_str = str(payload.emoji)
+        if payload.emoji.id is not None:
+            emoji_str = f"<:{payload.emoji.name}:{payload.emoji.id}>"
+        
+        GearbotLogging.log_key(guild.id, 'reaction_removed', 
+                              user=Utils.clean_user(user), user_id=user.id,
+                              channel=channel.mention, channel_id=channel.id,
+                              message_id=payload.message_id,
+                              emoji=emoji_str,
+                              message_author=message_author, message_author_id=message_author_id,
+                              jump_link=assemble_jumplink(guild.id, channel.id, payload.message_id))
 
     @staticmethod
     def convert_thread_type(guild_id, t):
