@@ -96,6 +96,7 @@ class ServerAdmin(BaseCog):
         "SPAM_VIOLATION",
         "CONFIG_CHANGES",
         "MESSAGE_FLAGS",
+        "REACTION_LOGS",
         "FUTURE_LOGS",
         "FAILED_MASS_PINGS",
         "THREAD_LOGS",
