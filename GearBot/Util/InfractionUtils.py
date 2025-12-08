@@ -6,7 +6,7 @@ import datetime
 
 from aioredis import ReplyError
 from disnake import NotFound
-from tortoise.query_utils import Q
+from tortoise.expressions import Q
 
 from Bot import GearBot
 from Util import Pages, Utils, Translator, GearbotLogging, Emoji, ReactionManager
