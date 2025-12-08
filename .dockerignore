@@ -1,4 +1,5 @@
 *
+!enums.py.patch
 !requirements.txt
 !GearBot/*
 !lang/*
