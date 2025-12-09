@@ -824,21 +824,22 @@ class ModLog(BaseCog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload: RawReactionActionEvent):
+        GearbotLogging.info(f"P1")
         if not hasattr(payload, 'guild_id') or payload.guild_id is None:
             return
-        
+        GearbotLogging.info(f"P2")
         guild = self.bot.get_guild(payload.guild_id)
         if guild is None or not Features.is_logged(guild.id, "REACTION_LOGS"):
             return
-        
+        GearbotLogging.info(f"P3")
         channel = self.bot.get_channel(payload.channel_id)
         if channel is None or isinstance(channel, DMChannel):
             return
-            
+        GearbotLogging.info(f"P4")
         user = await Utils.get_user(payload.user_id)
         if user is None or user.bot:
             return
-        
+        GearbotLogging.info(f"P5")
         # Get the message to include message info in the log
         try:
             message = await channel.fetch_message(payload.message_id)
@@ -848,10 +849,12 @@ class ModLog(BaseCog):
             message_author = "Unknown"
             message_author_id = 0
         
+        GearbotLogging.info(f"P6")
         emoji_str = str(payload.emoji)
         if payload.emoji.id is not None:
             emoji_str = f"<:{payload.emoji.name}:{payload.emoji.id}>"
         
+        GearbotLogging.info(f"P7")
         GearbotLogging.log_key(guild.id, 'reaction_added', 
                               user=Utils.clean_user(user), user_id=user.id,
                               channel=channel.mention, channel_id=channel.id,
