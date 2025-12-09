@@ -35,7 +35,11 @@ def prefix_callable(bot, message):
     if message.guild is None:
         prefixes.append('!') #use default ! prefix in DMs
     elif bot.STARTUP_COMPLETE:
-        prefixes.append(Configuration.legacy_get_var(message.guild.id, "GENERAL", "PREFIX"))
+        try:
+            prefixes.append(Configuration.legacy_get_var(message.guild.id, "GENERAL", "PREFIX"))
+        except ConfigNotLoaded:
+            # Config not yet loaded for this guild, use default prefix
+            prefixes.append('!')
     return prefixes
 
 
