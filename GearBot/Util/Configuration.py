@@ -1,4 +1,5 @@
 import asyncio
+from json import JSONDecodeError
 
 MASTER_CONFIG = dict()
 SERVER_CONFIGS = dict()
@@ -467,9 +468,17 @@ async def load_config(guild):
 async def load_bulk(guilds):
     global SERVER_CONFIGS
     configs = await GuildConfig.filter(guild_id__in=guilds)
+    loaded_guilds = set()
     for c in configs:
         SERVER_CONFIGS[c.guild_id] = c.guild_config
+        loaded_guilds.add(c.guild_id)
         await Features.check_server(c.guild_id)
+
+    # Load template config for guilds not in database
+    for guild_id in guilds:
+        if guild_id not in loaded_guilds:
+            GearbotLogging.info(f"No config in database for guild {guild_id}, loading template")
+            await load_config(guild_id)
 
 
 def validate_config(guild_id):
